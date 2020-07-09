@@ -11,6 +11,7 @@ Done = False
 Rows = 10
 Columns = 16
 PlayField = [[0 for i in range(Rows)] for j in range(Columns)]
+currentScore = 0
 
 
 def draw_field(screen):
@@ -111,6 +112,7 @@ def merge_shape(shape):
 
 
 def delete_full_rows():
+    global currentScore
     global PlayField
     deleted_rows = 0
     current_column = -1
@@ -133,10 +135,11 @@ def delete_full_rows():
             deleted_rows += 1
         except:
             break
+    currentScore += deleted_rows
     if deleted_rows > 0:
+        print("Current score: ", currentScore)
         extra_lines = [[0 for i in range(Rows)] for j in range(deleted_rows)]
         PlayField = numpy.vstack((extra_lines, PlayField))
-        print("added to playfiled?" + str(len(PlayField)))
 
 
 def main():
