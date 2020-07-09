@@ -173,7 +173,7 @@ def main():
             if event.type == pygame.KEYDOWN and event.key == pygame.K_DOWN:
                 currentShape.moveDown()
             if event.type == pygame.KEYDOWN and event.key == pygame.K_UP:
-                if not shape_stuck(currentShape.getRotatedShape(), currentShape.getX() - 1, currentShape.getY()):
+                if not shape_stuck(currentShape.getRotatedShape(), currentShape.getX(), currentShape.getY()):
                     currentShape.rotate()
         if shape_stuck(currentShape.getShape(), currentShape.getX(), currentShape.getY() + 1):
             merge_shape(currentShape)
