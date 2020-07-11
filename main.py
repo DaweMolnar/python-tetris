@@ -10,7 +10,7 @@ import Renderer
 ROWS = Renderer.ROWS
 COLUMNS = Renderer.COLUMNS
 
-play_field = [[0 for i in range(ROWS)] for j in range(COLUMNS)]
+playing_field = [[0 for i in range(ROWS)] for j in range(COLUMNS)]
 currentScore = 0
 current_shape = ShapeGetter.Shape(ROWS)
 next_shape = ShapeGetter.Shape(ROWS)
@@ -30,7 +30,7 @@ def shape_stuck(tetromino, x, y):
                 continue
             if exact_row >= ROWS or exact_column >= COLUMNS:
                 return True
-            if play_field[exact_column][exact_row] != 0:
+            if playing_field[exact_column][exact_row] != 0:
                 return True
         current_column += 1
     return False
@@ -38,7 +38,7 @@ def shape_stuck(tetromino, x, y):
 
 def merge_shape(shape):
     """ Merge given shape into the playing field """
-    global play_field
+    global playing_field
     tetromino = shape.get_tetromino()
     x = shape.get_x()
     y = shape.get_y()
@@ -51,18 +51,18 @@ def merge_shape(shape):
             current_row += 1
             if row == 0 or exact_row < 0 or exact_column < 0 or exact_row >= ROWS or exact_column >= COLUMNS:
                 continue
-            play_field[exact_column][exact_row] = row
+            playing_field[exact_column][exact_row] = row
         current_column += 1
 
 
 def delete_full_rows():
     """ Remove filled rows from the playing field, and move the others accordingly """
     global currentScore
-    global play_field
+    global playing_field
     deleted_rows = 0
     current_column = -1
     rows_to_delete = queue.LifoQueue()
-    for column in play_field:
+    for column in playing_field:
         current_row = -1
         current_column += 1
         full = True
@@ -76,7 +76,7 @@ def delete_full_rows():
     while True:
         try:
             element = rows_to_delete.get_nowait()
-            play_field = numpy.delete(play_field, element - deleted_rows, axis=0)
+            playing_field = numpy.delete(playing_field, element - deleted_rows, axis=0)
             deleted_rows += 1
         except:
             break
@@ -84,7 +84,7 @@ def delete_full_rows():
     if deleted_rows > 0:
         print("Current score: ", currentScore)
         extra_lines = [[0 for i in range(ROWS)] for j in range(deleted_rows)]
-        play_field = numpy.vstack((extra_lines, play_field))
+        playing_field = numpy.vstack((extra_lines, playing_field))
 
 
 def handle_game_events():
@@ -135,7 +135,7 @@ def tick():
 def render(screen):
     """ Render the window """
     Renderer.render_background(screen)
-    Renderer.render_elements_on_field(screen, play_field, current_shape)
+    Renderer.render_elements_on_field(screen, playing_field, current_shape)
     Renderer.render_next_shape(screen, next_shape)
 
 
